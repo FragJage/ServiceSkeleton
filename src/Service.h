@@ -42,6 +42,7 @@ public:
 	static const int TIMEOUT;
 
 	int Start(int argc, char* argv[]);
+	void SetVersion(const std::string& version);
 	int Wait();
 	int Wait(std::vector<std::reference_wrapper<ServiceConditionVariable>> cvs);
 	int WaitFor(std::vector<std::reference_wrapper<ServiceConditionVariable>> cvs, int timeout);
@@ -52,6 +53,7 @@ private:
     Service(const std::string& name, const std::string& description, IService *service);
     virtual ~Service();
 	void SetIds(std::vector<std::reference_wrapper<ServiceConditionVariable>> cvs);
+	void DisplayVersion();
 
     #ifdef WIN32
         typedef BOOL(WINAPI *ChangeServiceConfigType)(SC_HANDLE, DWORD, LPCVOID);
@@ -89,6 +91,7 @@ private:
 	StatusKind					m_Status;
 	std::mutex					m_StatusAccess;
 	ServiceConditionVariable	m_StatusChanged;
+	std::string         m_Version;
 };
 
 class Service::IService

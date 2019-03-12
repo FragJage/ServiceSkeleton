@@ -127,6 +127,7 @@ Service::Service(const string& name, const string& description, IService *servic
 	m_iService = service;
 	m_pInstance = this;
 	m_StatusChanged.set_id(Service::STATUS_CHANGED);
+	m_Version = "";
 	return;
 }
 
@@ -173,6 +174,17 @@ void Service::ChangeStatus(StatusKind status)
 	m_StatusChanged.notify_one();
 }
 
+void Service::SetVersion(const string& version)
+{
+    m_Version = version;
+}
+
+void Service::DisplayVersion()
+{
+    cout << m_pName << " version " << m_Version << endl;
+    cout << m_pDescription << endl;
+}
+
 #ifdef WIN32
 int Service::Start(int argc, char* argv[])
 {
@@ -181,6 +193,7 @@ int Service::Start(int argc, char* argv[])
 
     if (argc >= 2 && (*argv[1] == '-' || *argv[1] == '/'))
     {
+        if((strcmp("version", argv[1]+1) == 0)&&(m_Version!="")) return DisplayVersion();
         if(strcmp("install", argv[1]+1) == 0) return CmdInstall();
         if(strcmp("remove", argv[1]+1) == 0) return CmdRemove();
         if(strcmp("console", argv[1]+1) == 0) return m_iService->ServiceLoop(argc, argv);
@@ -199,6 +212,7 @@ int Service::Start(int argc, char* argv[])
 	cout << argv[0] << " /install       To install the service" << endl;
 	cout << argv[0] << " /remove        To remove the service" << endl;
 	cout << argv[0] << " /console       To run as a console application" << endl;
+	cout << argv[0] << " /version       To display the version" << endl;
 	return -1;
 }
 
@@ -452,6 +466,7 @@ int Service::Start(int argc, char* argv[])
 
     if (argc >= 2 && (*argv[1] == '-' || *argv[1] == '/'))
     {
+        if((strcmp("version", argv[1]+1) == 0)&&(m_Version!="")) { DisplayVersion(); return 0; }
         if(strcmp("start", argv[1]+1) == 0) return CmdStart(argc, argv);
         if(strcmp("stop", argv[1]+1) == 0) return CmdStop();
         if(strcmp("restart", argv[1]+1) == 0) return CmdRestart(argc, argv);
@@ -464,6 +479,7 @@ int Service::Start(int argc, char* argv[])
 	cout << argv[0] << " -stop        To stop the daemon" << endl;
 	cout << argv[0] << " -restart     To restart the daemon" << endl;
 	cout << argv[0] << " -console     To start on the console" << endl;
+	cout << argv[0] << " -version     To display the version" << endl;
 	return -1;
 }
 

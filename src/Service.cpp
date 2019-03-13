@@ -193,7 +193,7 @@ int Service::Start(int argc, char* argv[])
 
     if (argc >= 2 && (*argv[1] == '-' || *argv[1] == '/'))
     {
-        if((strcmp("version", argv[1]+1) == 0)&&(m_Version!="")) return DisplayVersion();
+        if((strcmp("version", argv[1]+1) == 0)&&(m_Version!="")) { DisplayVersion(); return 0; }
         if(strcmp("install", argv[1]+1) == 0) return CmdInstall();
         if(strcmp("remove", argv[1]+1) == 0) return CmdRemove();
         if(strcmp("console", argv[1]+1) == 0) return m_iService->ServiceLoop(argc, argv);
